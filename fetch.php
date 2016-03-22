@@ -8,10 +8,10 @@
     $balie_array = [];
     $passagiers_array = [];
     
-	$airport = new Airport( $server_patrick,
-    		                $database_patrick,
-            		        $uid_patrick,
-                    		$password_patrick );
+	$airport = new Airport( $server,
+    		                $database,
+            		        $uid,
+                    		$password );
 
 	$balie_array = getBalies();
 
