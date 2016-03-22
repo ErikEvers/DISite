@@ -1,8 +1,6 @@
 <?php
 
 	require('php/query_airport.php');
-
-
 	require('php/connectDatabase.php');
 
     $balie_array = [];
@@ -14,6 +12,7 @@
                     		$password );
 
 	$balie_array = getBalies();
+    $passagiers_array = getPassagiers(1);
 
     //Get Balies
     function getBalies()
@@ -26,27 +25,8 @@
     //Get Passagiers
     function getPassagiers($balienummer)
     {
-        global $conn, $passagiers_array;
-
-        $tsql = "
-                    SELECT * 
-                    FROM PassagierVoorVlucht PVV
-                    INNER JOIN Passagier P
-                    ON P.passagiernummer = PVV.passagiernummer
-                    WHERE PVV.balienummer = " . $balienummer;
+        global $airport;
         
-        $result = sqlsrv_query($conn, $tsql, null);
-
-        if ($result === false)
-        {
-            die(FormatErrors(sqlsrv_errors()));
-        }
-
-        while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC))
-        {
-            $passagiers_array[] = $row;
-            
-            //print_r($row);
-        }
+        return $airport->verzoek_vlucht($balienummer);
     }
 ?>

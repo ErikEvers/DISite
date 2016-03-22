@@ -1,7 +1,7 @@
 
 <?php
 	$server = "188.121.44.217";
-	$database = "gelre_airport";
+	$database = "gelreairport";
 	$uid = "ErikPatrick";
 	$password = "Wachtwoord1!";
 ?>

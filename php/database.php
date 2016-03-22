@@ -90,11 +90,6 @@ class Database
 
         $result = sqlsrv_query($this->conn, $sql, $param);
 
-        if ($result === false)
-        {
-            die(FormatErrors(sqlsrv_errors()));
-        }
-
         return $result;
     }
 
