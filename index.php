@@ -2,6 +2,37 @@
 <html class="fill">
     <head>
         <link rel="stylesheet" type="text/css" href="css/style.css">
+        <script src="js/jquery-1.12.2.js"></script>
+        <script>
+        
+            /*
+            
+                REQUEST OBJECT
+                
+                {
+                    func : 'getBalies' //Function name
+                    args : []          //Arguments for the function
+                }
+            
+            
+            */
+            
+            
+            $(document).ready(function()
+            {
+                //When balie button is pressed
+                $("#show_balie").click(function()
+                {
+                    $('#balie').addClass('active');
+                    
+                    //Send post request to file: fetch.php
+                    $.post('fetch.php', {func: 'getBalies'}, function(data)
+                    {
+                        console.log(data);
+                    })
+                });
+            });
+        </script>
     </head>
     <body class="fill no_margin no_border">
         <form class="fill" id="layout_container">
@@ -19,7 +50,7 @@
             -->
             <div class="fill_width" id="layout_header">
                 <ul class="no_margin no_list_style fill" id="layout_options">
-                    <li>Balies</li>
+                    <li id="show_balie">Balies</li>
                 </ul>
             </div>
             <div class="margin_40" id="layout_lists">
@@ -28,13 +59,7 @@
                         <div class="progress">1</div>
                     </div>
                     <div class="input list">
-                        <select class="fill" multiple>
-                            <?php
-
-                                for($i = 0, $il = count($balie_array); $i < $il; $i++)
-                                    echo '<option>Balie ' . $balie_array[$i]['balienummer'] . '   ' . $balie_array[$i]['maatschappijcode'] .  ' ' . $balie_array[$i]['naam'] . '</option>';
-
-                            ?>
+                        <select id="balie_list" class="fill" multiple>
                         </select>
                     </div>
                 </div>
@@ -42,22 +67,21 @@
                     <div id="passenger">
                         <label for="naam">Passagier naam</label>
                         <input id="naam"type="text" placeholder="search"/>
-                        <input type="text" placeholder="search"/>
-                        <input type="text" placeholder="search"/>
-                        <input type="text" placeholder="search"/>
-                        <input type="text" placeholder="search"/>
+                        <label for="vlucht">Vlucht naam</label>
+                        <input id="vlucht" type="text" placeholder="search"/>
+                        <label for="bestemming">Bestemming</label>
+                        <input id="bestemming" type="text" placeholder="search"/>
+                        <label for="maatschappij">Maatschappij</label>
+                        <input id="maatschappij" type="text" placeholder="search"/>
+                        <label for="vertrek">Vertrekdatum</label>
+                        <input id="vertrek" type="text" placeholder="search"/>
                     </div>
                     <div class="" id="layout_progress">
                         <div class="progress">2</div>
                     </div>
                     <div class="input list">
                         <select class="fill" multiple>
-                            <?php
-
-                                for($i = 0, $il = count($passagiers_array); $i < $il; $i++)
-                                    echo '<option>Passagier ' . $passagiers_array[$i]['passagiernummer'] . ' ' . date_format( $passagiers_array[$i]['geboortedatum'], 'd/m/y') .  ' ' . $passagiers_array[$i]['naam'] . ' op vluchtnummer ' . $passagiers_array[$i]['vluchtnummer'] . '</option>';
-
-                            ?>
+                            
                         </select>
                     </div>
                 </div>

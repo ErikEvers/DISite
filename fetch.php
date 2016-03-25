@@ -3,6 +3,11 @@
 	require('php/query_airport.php');
 	require('php/connectDatabase.php');
 
+    if(isset($_POST['func']))
+    {
+        $func($_POST['func']);
+    }
+
     $balie_array = [];
     $passagiers_array = [];
     
@@ -19,7 +24,7 @@
     {
     	global $airport;
 
-       	return $airport->verzoek_balies();
+       	echo json_encode($airport->verzoek_balies());
     }
     
     //Get Passagiers
@@ -27,6 +32,6 @@
     {
         global $airport;
         
-        return $airport->verzoek_vlucht($balienummer);
+        echo json_encode($airport->verzoek_vlucht($balienummer));
     }
 ?>

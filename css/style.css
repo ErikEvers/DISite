@@ -96,7 +96,7 @@
                 width: 100px;
                 height: 50px;
                 
-                background-color: #FFFFFF;
+                background-color: darkseagreen;
                 
                 border-radius: 10px;
                 
@@ -114,6 +114,7 @@
             .layout_list
             {
                 position: relative;
+                display: none;
                 
                 margin: 25px 0;
                 
@@ -124,6 +125,11 @@
                 
                 overflow: hidden
             }
+
+            .layout_list.active
+            {
+                display: block;
+            }      
             
             .layout_list#balie
             {
