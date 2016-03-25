@@ -1,6 +1,13 @@
-/*
+            /*
             
-                REQUEST OBJECT
+            CACHE OBJECTS:
+            
+            BALIE NUMMER
+            PASSAGIERVOORVLUCHT
+            
+            
+            
+            REQUEST OBJECT
                 
                 {
                     func : 'getBalies' //Function name
@@ -10,6 +17,8 @@
             
             */
             
+
+
             
             $(document).ready(function()
             {
@@ -27,7 +36,14 @@
                         {
                             //Parse data from PHP to JSON
                             var data = JSON.parse(data);
-                            console.log(data);
+                            
+                            //Check for exceptions or errors
+                            if(data.hasOwnProperty('err'))
+                            {
+                                
+                                
+                                return;
+                            }
 
                             //Loop though all data and add all balies to select list
                             for(var i = 0, il = data.length; i < il; i++)
@@ -44,6 +60,23 @@
                 $('#balie_list').on('click', 'option', function()
                 {
                     $('#passagier_list').toggleClass('active');
-                    console.log($(this).text());
-                })
+                    
+                    
+                });
+
+                $('form').submit(function( event )
+                {
+                    var arguments = $( this ).serializeArray();
+                    event.preventDefault();
+                    
+                    console.log(arguments);
+                    
+                    $.post('fetch.php', { func : 'getPassagiers', args : arguments }, function(data)
+                    {
+                        var data = JSON.parse(data);
+                        console.log(data);
+                    })
+                    
+                    return false;
+                });
             });

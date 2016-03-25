@@ -42,15 +42,59 @@
 
 			return false;
     	}
+        
+        public function vind_passagier($searchables)
+        {
+            $values = [];
+            
+            $passagierNaamSearch = "";
+            $vluchtNaamSearch = "";
+            $bestemmingNaamSearch = "";
+            $maatschappijNaamSearch = "";
+            $vertrektijdstipSearch = "";
+            
+            //Passagiernaam
+            if(!empty($searchables[0]['value']))
+            {
+                $passagierNaamSearch = " P.naam LIKE ? AND";
+                $values[] = '%' . $searchables[0]['value'] . '%';
+            }
+            //Vluchtnummer
+            if(!empty($searchables[1]['value']))
+            {
+                $vluchtNaamSearch = " PVV.vluchtnummer = ? AND";
+                $values[] = (int)$searchables[1]['value'];
+            }
+            //Bestemmingsnaam
+            if(!empty($searchables[2]['value']))
+            {
+                $bestemmingNaamSearch = " L.naam LIKE '%?%' AND";
+                $values[] = $searchables[2]['value'];
+            }
+            //Maatschappijnaam
+            if(!empty($searchables[3]['value']))
+            {
+                $maatschappijNaamSearch = " M.naam LIKE '%?%' AND";
+                $values[] = $searchables[3]['value'];
+            }
+            //Vlucht vertrektijdstip en aankomsttijdstip
+            //ERIK VIND DAT ER TWEE WAARDES IN MOETEN??
+            if(!empty($searchables[4]['value']))
+            {
+                $vertrektijdstipSearch = " V.vertrektijdstip BETWEEN '? 00:00:00' AND '? 23:59:59' AND";
+                $values[] = $searchables[4]['value'];
+            }
+            
+                
+            $dataQuery = "SELECT * FROM PassagierVoorVlucht PVV INNER JOIN Passagier P ON PVV.passagiernummer = P.passagiernummer INNER JOIN Vlucht V ON PVV.vluchtnummer = V.vluchtnummer INNER JOIN Luchthaven L ON V.luchthavencode = L.luchthavencode INNER JOIN Maatschappij M ON V.maatschappijcode = M.maatschappijcode WHERE" . $passagierNaamSearch . $vluchtNaamSearch . $bestemmingNaamSearch . $maatschappijNaamSearch . $vertrektijdstipSearch ;
+            
+            $dataQuery = substr($dataQuery, 0, -3);
 
-    	public function verzoek_vlucht($balienummer)
-    	{
-			$result = $this->verzendQuery("SELECT * 
-                    FROM PassagierVoorVlucht PVV
-                    INNER JOIN Passagier P
-                    ON P.passagiernummer = PVV.passagiernummer
-                    WHERE PVV.balienummer = ?", array($balienummer));
-    		
+            //var_dump($dataQuery);
+            
+            
+            $result = $this->verzendQuery($dataQuery, $values);
+            
 			if($result)
 			{
 				$fetch_array = [];
@@ -64,6 +108,35 @@
 			}
 
 			return false;
+        }
+
+    	public function verzoek_vlucht($balienummer)
+    	{
+            $dataQuery = "SELECT *
+                                FROM PassagierVoorVlucht PVV INNER JOIN Passagier P ON PVV.passagiernummer = P.passagiernummer
+                                INNER JOIN Vlucht V ON PVV.vluchtnummer = V.vluchtnummer
+                                INNER JOIN Luchthaven L ON V.luchthavencode = L.luchthavencode
+                                INNER JOIN Maatschappij M ON V.maatschappijcode = M.maatschappijcode";
+            
+            
+            return [];
+            /*
+			$result = $this->verzendQuery("
+    WHERE P.naam LIKE '%?%' OR PVV.vluchtnummer = ? OR L.naam LIKE '%?%' OR M.naam LIKE '%?%' OR V.vertrektijdstip BETWEEN '? 00:00:00' AND '? 23:59:59'", array($balienummer));
+    		
+			if($result)
+			{
+				$fetch_array = [];
+
+				while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) 
+				{
+					$fetch_array[] = $row;
+				}
+
+				return $fetch_array;
+			}
+
+			return false;*/
     	}
 
 	}

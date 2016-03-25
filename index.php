@@ -35,18 +35,19 @@
                     </div>
                 </div>
                 <div class="layout_list" id="passagier_list">
-                    <div id="passenger">
-                        <label for="naam">Passagier naam</label>
-                        <input id="naam"type="text" placeholder="search"/>
-                        <label for="vlucht">Vlucht naam</label>
-                        <input id="vlucht" type="text" placeholder="search"/>
-                        <label for="bestemming">Bestemming</label>
-                        <input id="bestemming" type="text" placeholder="search"/>
-                        <label for="maatschappij">Maatschappij</label>
-                        <input id="maatschappij" type="text" placeholder="search"/>
-                        <label for="vertrek">Vertrekdatum</label>
-                        <input id="vertrek" type="text" placeholder="search"/>
-                    </div>
+                    <form id="passenger" action="#">
+                        <label for="naam_txt">Passagier naam</label>
+                        <input id="naam_txt"type="text" name="passagiernaam" placeholder="search"/>
+                        <label for="vlucht_txt">Vlucht nummer</label>
+                        <input id="vlucht_txt" type="text" name="vluchtnummer" placeholder="search"/>
+                        <label for="bestemming_txt">Bestemming</label>
+                        <input id="bestemming_txt" type="text" name="bestemmingnaam" placeholder="search"/>
+                        <label for="maatschappij_txt">Maatschappij</label>
+                        <input id="maatschappij_txt" type="text" name="maatschappijnaam" placeholder="search"/>
+                        <label for="vertrek_txt">Vertrekdatum</label>
+                        <input id="vertrek_txt" type="text" name="vertrektijdstip" placeholder="search"/>
+                        <input id="passenger_submit" type="submit"/>
+                    </form>
                     <div class="" id="layout_progress">
                         <div class="progress">2</div>
                     </div>

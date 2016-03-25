@@ -9,9 +9,15 @@
             		        $uid,
                     		$password );
 
+    //If POST attribute args exist use args
+    if(isset($_POST['args']))
+        $args = $_POST['args'];
+    else
+        $args = [];
+
     if(isset($_POST['func']))
     {
-        $_POST['func']();
+        $_POST['func']($args);
     }
 
 
@@ -24,10 +30,10 @@
     }
     
     //Get Passagiers
-    function getPassagiers($balienummer)
+    function getPassagiers($searchables)
     {
         global $airport;
         
-        echo json_encode($airport->verzoek_vlucht($balienummer));
+        echo json_encode($airport->vind_passagier($searchables));
     }
 ?>
