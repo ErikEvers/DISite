@@ -3,43 +3,7 @@
     <head>
         <link rel="stylesheet" type="text/css" href="css/style.css">
         <script src="js/jquery-1.12.2.js"></script>
-        <script>
-        
-            /*
-            
-                REQUEST OBJECT
-                
-                {
-                    func : 'getBalies' //Function name
-                    args : []          //Arguments for the function
-                }
-            
-            
-            */
-            
-            
-            $(document).ready(function()
-            {
-                //When balie button is pressed
-                $("#show_balie").click(function()
-                {
-                    $('#balie').addClass('active');
-                    
-                    //Send post request to file: fetch.php
-                    $.post('fetch.php', {func: 'getBalies'}, function(data)
-                    {
-                        var data = JSON.parse(data);
-                        
-                        for(var i = 0, il = data.length; i < il; i++)
-                        {
-                            var balie = data[i];
-                            
-                            $('#balie_list').append('<option>' + balie.balienummer + ' ' + balie.naam + '</option>');
-                        }
-                    });
-                });
-            });
-        </script>
+        <script src="js/balie_keuze.js"></script>
     </head>
     <body class="fill no_margin no_border">
         <form class="fill" id="layout_container">
@@ -70,7 +34,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="layout_list">
+                <div class="layout_list" id="passagier_list">
                     <div id="passenger">
                         <label for="naam">Passagier naam</label>
                         <input id="naam"type="text" placeholder="search"/>
