@@ -107,6 +107,35 @@ class Database
     }
 
     
+    protected function beginTransaction()
+    {
+        if(!$this->checkConnectie())
+        {
+            if(!$this->maakConnectie(   $this->server,
+                                        $this->database,
+                                        $this->uid,
+                                        $this->password))
+            {
+                return false;
+            }
+        }
+        
+        if ( sqlsrv_begin_transaction( $this->conn ) === false ) 
+        {
+             die( print_r( sqlsrv_errors(), true ));
+        }
+    }
+    
+    protected function rollbackTransaction()
+    {
+        sqlsrv_rollback( $conn );
+    }
+    
+    protected function commitTransaction()
+    {
+        sqlsrv_commit( $conn );
+    }
+    
 /*   -----------------------------------------------------------------------------------
 
      Checks whether the given gebruikersnaam + wachtwoord is correct 
