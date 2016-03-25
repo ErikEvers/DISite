@@ -46,11 +46,15 @@
     }
         
     //Check in Passagier
-    function checkinPassagier($confirmation)
+    function checkinPassagier($args)
     {
         global $airport;
         
-        echo json_encode($airport->checkin_passagier($confirmation[0], $confirmation[1], $confirmation[2]));
+        echo json_encode($airport->checkin_passagier($args[0]['value'], 
+                                                     $args[1]['value'], 
+                                                     $args[2]['value'],
+                                                     $args[3]['value'],
+                                                     $args[4]['value']));
     }
 
     //Get Bagage

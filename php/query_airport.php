@@ -135,14 +135,14 @@ WHERE P.passagiernummer = ? AND V.vluchtnummer = ?";
 			return false;
     	}
         
-        public function checkin_passagier($stoel, $inchecktijdstip, $balienummer)
+        public function checkin_passagier($stoel, $inchecktijdstip, $balienummer, $passagiernummer, $vluchtnummer)
         {
-            $dataQuery = "UPDATE PassagierVoorVlucht PVV SET stoel = ?, inchecktijdstip = ?, balienummer = ?";
+            $dataQuery = "UPDATE PassagierVoorVlucht SET stoel = ?, inchecktijdstip = ?, balienummer = ? WHERE passagiernummer = ? AND vluchtnummer = ? ";
             
             //VERWIJDER DIT VOOR ECHTE VERSIE
             $this->beginTransaction();
             
-			$result = $this->verzendQuery($dataQuery, array($stoel, $inchecktijdstip, $balienummer));
+			$result = $this->verzendQuery($dataQuery, array($stoel, $inchecktijdstip, $balienummer, $passagiernummer, $vluchtnummer));
     		
             //VERWIJDER DIT VOOR ECHTE VERSIE
             $this->rollbackTransaction();

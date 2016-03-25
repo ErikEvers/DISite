@@ -128,12 +128,12 @@ class Database
     
     protected function rollbackTransaction()
     {
-        sqlsrv_rollback( $conn );
+        sqlsrv_rollback( $this->conn );
     }
     
     protected function commitTransaction()
     {
-        sqlsrv_commit( $conn );
+        sqlsrv_commit( $this->conn );
     }
     
 /*   -----------------------------------------------------------------------------------

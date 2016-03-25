@@ -63,7 +63,9 @@ $(document).ready(function()
     {
         $('#passagier').toggleClass('active');
 
-
+        balienummer = $(this).index() + 1;
+        
+        console.log(balienummer);
     });
 
     $('#passenger').submit(function( event )
@@ -116,12 +118,11 @@ $(document).ready(function()
                 return;
             }
 
-            var vluchtData = data;
+            vluchtData = data;
+            console.log(vluchtData);
             
             for(att in data)
             {
-                console.log(data[att]);
-
                 $('#passagier_gegevens').append('<li>' + att + ': ' + data[att] + '</li>');
             }
         })
@@ -130,11 +131,14 @@ $(document).ready(function()
     $('#checkin').submit(function( event )
     {
         var arguments = $(this).serializeArray();
-        arguments.push({'name': 'balienummer', value: balienummer});
-
+        arguments = arguments.concat([  {'name': 'balienummer', value: balienummer},
+                                        {'name': 'passagiernummer', value: vluchtData.passagiernummer},
+                                        {'name': 'vluchtnummer', value: vluchtData.vluchtnummer}]);
         event.preventDefault();
+        
+        console.log(arguments);
 
-        $.post('fetch.php', { func : 'checkinPassagier', args ; arguments }, function(data)
+        $.post('fetch.php', { func : 'checkinPassagier', args : arguments }, function(data)
         {
             var data = JSON.parse(data);
 
@@ -166,7 +170,7 @@ function getBagageLijst(passagier, vluchtnummer)
         {
             var bagage = data[i];
             
-            $('#bagage_list').append('<option>' + bagage.volgnummer + ' ' + bagage.gewicht + '</option>');
+            $('#bagage_list').append('<option>Volgnummer: ' + bagage.volgnummer + ', Gewicht: ' + bagage.gewicht + '</option>');
         }
     });
 }
