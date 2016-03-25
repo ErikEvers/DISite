@@ -149,7 +149,7 @@ WHERE P.passagiernummer = ? AND V.vluchtnummer = ?";
             
             if($result)
             {
-				return ["succes" : true];
+				return ["succes" => true];
 			}
 
 			return false;
