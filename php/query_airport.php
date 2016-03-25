@@ -18,9 +18,9 @@
     	{
     		parent::__construct($server, $database, $uid, $password);
 
-    		if($this->checkConnectie())
+    		if(!$this->checkConnectie())
     		{
-    			echo 'Connection: OK';
+    			die('Connection: OK');
     		}
     	}
 

@@ -3,21 +3,17 @@
 	require('php/query_airport.php');
 	require('php/connectDatabase.php');
 
-    if(isset($_POST['func']))
-    {
-        $func($_POST['func']);
-    }
 
-    $balie_array = [];
-    $passagiers_array = [];
-    
-	$airport = new Airport( $server,
+    $airport = new Airport( $server,
     		                $database,
             		        $uid,
                     		$password );
 
-	$balie_array = getBalies();
-    $passagiers_array = getPassagiers(1);
+    if(isset($_POST['func']))
+    {
+        $_POST['func']();
+    }
+
 
     //Get Balies
     function getBalies()

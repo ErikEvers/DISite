@@ -28,8 +28,15 @@
                     //Send post request to file: fetch.php
                     $.post('fetch.php', {func: 'getBalies'}, function(data)
                     {
-                        console.log(data);
-                    })
+                        var data = JSON.parse(data);
+                        
+                        for(var i = 0, il = data.length; i < il; i++)
+                        {
+                            var balie = data[i];
+                            
+                            $('#balie_list').append('<option>' + balie.balienummer + ' ' + balie.naam + '</option>');
+                        }
+                    });
                 });
             });
         </script>
