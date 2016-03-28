@@ -62,11 +62,10 @@ $(document).ready(function()
     //Search for option when clicked on #balie_list
     $('#balie_list').on('click', 'option', function()
     {
-        $('#passagier').toggleClass('active');
-
-        balienummer = $(this).index() + 1;
+        //$('#passagier').toggleClass('active');
+        next($('.layout_list').get(0));
         
-        console.log(balienummer);
+        balienummer = $(this).index() + 1;
     });
 
     $('#passenger').submit(function( event )
@@ -104,7 +103,7 @@ $(document).ready(function()
     //Search for option when clicked on #passagier_list
     $('#passagier_list').on('click', 'option', function()
     {
-        $('#vlucht').toggleClass('active');
+        next($('.layout_list').get(1));
 
         passagier = passagierArray[$(this).index()];
 
@@ -122,11 +121,35 @@ $(document).ready(function()
             }
 
             vluchtData = data;
+            var pk = [
+                'passagiernummer',
+                'naam',
+                'geslacht',
+            ];
             
-            for(att in data)
+            for(var i = 0, il = pk.length; i < il; i++)
             {
-                $('#passagier_gegevens').append('<li>' + att + ': ' + data[att] + '</li>');
+                $('#passagier_gegevens').append('<li>' + pk[i] + ': ' + data[pk[i]] + '</li>');
             }
+            
+            $('#passagier_gegevens').append('<li>Geboortedatum: ' + data['geboortedatum']['date'] + '</li>');
+            
+            
+            var vk = [
+                'vluchtnummer',
+                'vliegtuigtype',
+                'luchthavencode',
+                'gatecode',
+                'maatschappijcode'
+            ];
+            
+            for(i = 0, il = vk.length; i < il; i++)
+            {
+                $('#vlucht_gegevens').append('<li>' + vk[i] + ': ' + data[vk[i]] + '</li>');
+            }
+            
+            $('#vlucht_gegevens').append('<li>Vertrektijdstip: ' + data['geboortedatum']['date'] + '</li>');
+            
         })
     });
 
@@ -154,8 +177,8 @@ $(document).ready(function()
             //Confirmation of inchecking
             if(data.hasOwnProperty('succes'))
             {
-                $('#bagage').toggleClass('active');
-
+                next($('.layout_list').get(2));
+                
                 getBagageLijst(arguments[0].value, arguments[1].value);
             }
         });
@@ -184,6 +207,30 @@ $(document).ready(function()
         });
     })
 });
+
+function next(element)
+{
+    var active = $(element);
+    
+    console.log(active);
+    
+    if($(active).hasClass('active'))
+    {
+        $(active).removeClass('active');
+        $(active).addClass('inactive');
+
+        $(active).next().slideToggle(500, function()
+        {
+            $(this).addClass('active');
+
+            $('html, body').animate({
+                scrollTop: $(this).offset().top
+            }, 500);
+
+            $(this).find('input[type=text],select').filter(':visible:first').focus();
+        });
+    }
+}
 
 function getBagageLijst(passagier, vluchtnummer)
 {

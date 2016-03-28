@@ -7,6 +7,11 @@ body
     background-attachment: fixed;
 }
 
+select
+{
+    font-family: 'Raleway', sans-serif; 
+}
+
 .margin_20
 {
     margin: 20px;
@@ -75,7 +80,8 @@ body
     
     background-color: #FFFFFF;
 
-    border-bottom: 5px solid #AAAAAA;
+    border: 1px solid #AAAAAA;
+    border-bottom-width: 5px;
 }
 
 .input.list option
@@ -153,6 +159,11 @@ body
 {
     display: block;
 }      
+
+.layout_list.inactive
+{
+    display: block;
+}
 
 .layout_list#balie
 {
