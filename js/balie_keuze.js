@@ -19,6 +19,7 @@ REQUEST OBJECT
 
 
 var passagierArray  = [];
+var passagier       = null;
 var vluchtData     = [];
 var balienummer     = null;
 
@@ -105,8 +106,10 @@ $(document).ready(function()
     {
         $('#vlucht').toggleClass('active');
 
-        var passagier = passagierArray[$(this).index()];
+        passagier = passagierArray[$(this).index()];
 
+        console.log(passagier);
+        
         $.post('fetch.php', { func : 'getGegevens', args : [passagier.passagiernummer, passagier.vluchtnummer]}, function(data)
         {
             var data = JSON.parse(data)[0];
@@ -119,7 +122,6 @@ $(document).ready(function()
             }
 
             vluchtData = data;
-            console.log(vluchtData);
             
             for(att in data)
             {
@@ -158,6 +160,29 @@ $(document).ready(function()
             }
         });
     });
+    
+    $('#confirm_bagage').submit(function( event )
+    {
+        event.preventDefault();
+        
+        $.post('fetch.php', { func : 'check_bagage', args :[passagier.passagiernummer, passagier.vluchtnummer] }, function(data)
+        {
+            var data = JSON.parse(data);
+            
+             //Check for exceptions or errors
+            if(data.hasOwnProperty('err'))
+            {
+
+                return;
+            }
+
+            //Confirmation of inchecking
+            if(data.hasOwnProperty('succes'))
+            {
+                
+            }
+        });
+    })
 });
 
 function getBagageLijst(passagier, vluchtnummer)

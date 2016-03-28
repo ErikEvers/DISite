@@ -175,6 +175,32 @@ WHERE P.passagiernummer = ? AND V.vluchtnummer = ?";
 
 			return false;
         }
+        
+        public function check_bagage($passagiernummer, $vluchtnummer)
+        {
+            $dataQuery = "SELECT 1 AS result FROM Object O INNER JOIN Vlucht V ON V.vluchtnummer = O.vluchtnummer WHERE O.passagiernummer = ? AND V.vluchtnummer = ? GROUP BY O.passagiernummer, V.vluchtnummer, V.max_ppgewicht HAVING SUM(O.gewicht) > V.max_ppgewicht";
+            
+            $result = $this->verzendQuery($dataQuery, [$passagiernummer, $vluchtnummer]);
+            
+            if($result)
+			{
+				$fetch_array = [];
+
+				while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) 
+				{
+					if($row['result'] === 1)
+                    {
+                        return ["err" => true];
+                    }
+                    else
+                    {
+                        return ["succes" => true];
+                    }
+				}
+			}
+
+			return false;
+        }
 	}
 
 ?>

@@ -64,4 +64,12 @@
         
         echo json_encode($airport->get_bagage($args[0], $args[1]));
     }
+
+    //Check Bagage
+    function check_bagage($args)
+    {
+        global $airport;
+        
+        echo json_encode($airport->check_bagage($args[0], $args[1]));
+    }
 ?>
