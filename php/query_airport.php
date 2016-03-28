@@ -184,20 +184,55 @@ WHERE P.passagiernummer = ? AND V.vluchtnummer = ?";
             
             if($result)
 			{
-				$fetch_array = [];
-
-				while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) 
-				{
-					if($row['result'] === 1)
-                    {
-                        return ["err" => true];
-                    }
-                    else
-                    {
-                        return ["succes" => true];
-                    }
-				}
+                if(sqlsrv_num_rows($result) < 1)
+                    return ["succes" => true];
 			}
+
+            return ["err" => true];
+        }
+        
+        public function add_bagage($passagiernummer, $vluchtnummer, $gewicht)
+        {
+            $dataQuery = "INSERT INTO Object(passagiernummer, vluchtnummer, gewicht) VALUES(?, ?, ?)";
+            
+            $result = $this->verzendQuery($dataQuery, [$passagiernummer, $vluchtnummer, $gewicht]);
+            
+            if($result)
+			{
+				return ["succes" => true];
+			}
+            else
+            {
+                return ["err"   => true];
+            }
+
+			return false;
+        }
+        
+        public function remove_bagages($passagiernummer, $vluchtnummer, $volgnummers)
+        {
+            $dataQuery = "DELETE FROM Object WHERE passagiernummer = ? AND vluchtnummer = ? AND volgnummer IN ";
+            
+            $volgnummerQuery = "";
+            
+            for($i = 0, $il = count($volgnummers); $i < $il; $i++)
+            {
+                $volgnummerQuery .= "? , ";
+            }
+            
+            $volgnummerQuery = substr($volgnummerQuery, 0, -3);
+            
+            $result = $this->verzendQuery($dataQuery . '( ' . $volgnummerQuery . ' )', 
+                                          array_merge([$passagiernummer, $vluchtnummer], $volgnummers));
+            
+            if($result)
+			{
+				return ["succes" => true];
+			}
+            else
+            {
+                return ["err"   => true];
+            }
 
 			return false;
         }

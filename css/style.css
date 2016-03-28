@@ -150,19 +150,29 @@ select
     padding: 0 0 50px 0;
 
     width: 100%;
-    height: auto;
+    height: 0px;
 
-    overflow: hidden
+    overflow: hidden;
+        
+    -webkit-transition: height 0.3s;
+    transition: height 0.3s;
 }
 
 .layout_list.active
 {
     display: block;
+    
+    height: auto;
+    
+    -webkit-transition: height 0.3s;
+    transition: height 0.3s;
 }      
 
 .layout_list.inactive
 {
     display: block;
+    
+    height: auto;
 }
 
 .layout_list#balie
@@ -197,9 +207,10 @@ select
     width: 140px;
 
     color: #FFFFFF;
-    font-family: 'helvetica';
+    font-family: 'Helvetica', sans-serif;
     font-size: 80pt;
     text-align: center;
+    line-height: 160px;
 }
 
 #balie_list

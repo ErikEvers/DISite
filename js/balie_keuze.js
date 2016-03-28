@@ -93,6 +93,7 @@ $(document).ready(function()
 
                 passagierArray.push(passagier);
 
+                $('#passagier_list').empty();
                 $('#passagier_list').append('<option>' + passagier.passagiernaam + ' ' + passagier.vluchtnummer + ' ' + passagier.bestemming + ' ' + passagier.maatschappijnaam + ' ' + passagier.vertrektijdstip + '</option>');
             }
         })
@@ -127,6 +128,8 @@ $(document).ready(function()
                 'geslacht',
             ];
             
+            $('#passagier_gegevens').empty();
+            
             for(var i = 0, il = pk.length; i < il; i++)
             {
                 $('#passagier_gegevens').append('<li>' + pk[i] + ': ' + data[pk[i]] + '</li>');
@@ -142,6 +145,8 @@ $(document).ready(function()
                 'gatecode',
                 'maatschappijcode'
             ];
+            
+            $('#vlucht_gegevens').empty();
             
             for(i = 0, il = vk.length; i < il; i++)
             {
@@ -195,6 +200,29 @@ $(document).ready(function()
              //Check for exceptions or errors
             if(data.hasOwnProperty('err'))
             {
+                return;
+            }
+
+            //Confirmation of inchecking
+            if(data.hasOwnProperty('succes'))
+            {
+                 next($('.layout_list').get(0));
+            }
+        });
+    });
+    
+    $('#add_bagage').submit(function( event )
+    {
+        event.preventDefault();
+        
+        $.post('fetch.php', { func : 'add_bagage', args :[passagier.passagiernummer, passagier.vluchtnummer, $(this).find('input[name=gewicht]').val()] }, function(data)
+        {
+            var data = JSON.parse(data);
+            
+             //Check for exceptions or errors
+            if(data.hasOwnProperty('err'))
+            {
+                alert('failed');
 
                 return;
             }
@@ -202,38 +230,85 @@ $(document).ready(function()
             //Confirmation of inchecking
             if(data.hasOwnProperty('succes'))
             {
-                
+                getBagageLijst(passagier.passagiernummer, passagier.vluchtnummer);
             }
         });
-    })
+    });
+    
+    $('#remove_bagage').submit(function( event )
+    {
+        event.preventDefault();
+        
+        var selected = [];
+        
+        $( "#bagage_list option:selected").each(function(n, element)
+        {
+            selected.push($(element).val());
+        });
+        
+        $.post('fetch.php', { func : 'remove_bagages', args :[passagier.passagiernummer, passagier.vluchtnummer, selected] }, function(data)
+        {
+            var data = JSON.parse(data);
+            
+             //Check for exceptions or errors
+            if(data.hasOwnProperty('err'))
+            {
+                alert('failed');
+
+                return;
+            }
+
+            //Confirmation of inchecking
+            if(data.hasOwnProperty('succes'))
+            {
+                getBagageLijst(passagier.passagiernummer, passagier.vluchtnummer);
+            }
+        });
+    });
 });
 
 function next(element)
 {
     var active = $(element);
     
-    console.log(active);
     
-    if($(active).hasClass('active'))
+    
+    if($(active).hasClass('active') || $(active).hasClass('inactive'))
     {
         $(active).removeClass('active');
         $(active).addClass('inactive');
-
-        $(active).next().slideToggle(500, function()
+        
+        $(active).prevAll().each(function(n, element)
         {
-            $(this).addClass('active');
-
-            $('html, body').animate({
-                scrollTop: $(this).offset().top
-            }, 500);
-
-            $(this).find('input[type=text],select').filter(':visible:first').focus();
+            if(!$(element).hasClass('inactive'))
+                $(element).addClass('inactive');
         });
+
+        $(active).nextAll().each(function(n, element)
+        {
+            if($(element).hasClass('active'))
+                $(element).removeClass('active');
+
+            if($(element).hasClass('inactive'))
+                $(element).removeClass('inactive');
+        });
+        
+        var next_option = $(active).next();
+        
+        next_option.addClass('active');
+
+         $('html, body').animate({
+            scrollTop: $(next_option).offset().top
+        }, 400);
+
+        $(next_option).find('input[type=text],select').filter(':visible:first').focus();
     }
 }
 
 function getBagageLijst(passagier, vluchtnummer)
 {
+    $('#bagage_list').empty();
+    
     $.post('fetch.php', { func: 'getBagage', args: [vluchtData.passagiernummer, vluchtData.vluchtnummer] }, function(data)
     {
         var data = JSON.parse(data);
@@ -242,7 +317,7 @@ function getBagageLijst(passagier, vluchtnummer)
         {
             var bagage = data[i];
             
-            $('#bagage_list').append('<option>Volgnummer: ' + bagage.volgnummer + ', Gewicht: ' + bagage.gewicht + '</option>');
+            $('#bagage_list').append('<option value="' + bagage.volgnummer + '">Volgnummer: ' + bagage.volgnummer + ', Gewicht: ' + bagage.gewicht + '</option>');
         }
     });
 }

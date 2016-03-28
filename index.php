@@ -59,10 +59,8 @@
                     </div>
                     <div class="input list">
                         <form id="checkin">
-                            <label for="stoel_txt">Stoel Nummer:</label>
-                            <input id="stoel_txt" type="text" name="stoel"/>
-                            <label for="inchecktijdstip_txt">Inchecktijdstip:</label>
-                            <input id="inchecktijdstip_txt" type="text" name="inchecktijdstip"/>
+                            <input id="stoel_txt" type="text" name="stoel" placeholder="Stoel Nummer"/>
+                            <input id="inchecktijdstip_txt" type="text" name="inchecktijdstip" placeholder="Inchecktijdstip"/>
                             <input type="submit" value="Check In"/>
                         </form>
                         <div class="column_parent">

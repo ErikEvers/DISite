@@ -72,4 +72,20 @@
         
         echo json_encode($airport->check_bagage($args[0], $args[1]));
     }
+
+    //Add Bagage
+    function add_bagage($args)
+    {
+        global $airport;
+        
+        echo json_encode($airport->add_bagage($args[0], $args[1], $args[2]));
+    }
+
+    //Remove Bagages
+    function remove_bagages($args)
+    {
+        global $airport;
+        
+        echo json_encode($airport->remove_bagages($args[0], $args[1], $args[2]));
+    }
 ?>
