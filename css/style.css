@@ -97,9 +97,59 @@ select
     line-height: 40px;
 }
 
+.input.text
+{
+    display: block;
+
+    margin: 20px;
+    
+    width: 100%;
+    height: 40px;
+    
+    border: 1px solid #AAAAAA;
+    border-bottom: 1px solid #DDDDDD;
+    
+    text-indent: 15px;
+}
+
+.input.submit
+{
+    display: block;
+    
+    margin: 20px;
+        
+    height: 40px;
+    width: 200px;
+    
+    background-color: #FFFFFF;
+    
+    border: 1px solid #AAAAAA;
+}
+
+
+
 #layout_navigator
 {
     padding: 25px;
+}
+
+#layout_navigator li
+{
+    padding: 0 25px;
+    
+    height: 50px;
+    width: auto;
+    
+    background-color: #FFFFFF;
+    border: 1px solid #AAAAAA;
+    border-bottom-width: 5px;
+    
+    color: #1E4D2B;
+    
+    font-family: 'Raleway', sans-serif;
+    line-height: 50px;
+    
+    cursor: pointer;
 }
 
 #layout_container
@@ -154,29 +204,23 @@ select
 
 .layout_list
 {
+    display: none;
+    
     margin: 25px 0;
 
     width: 100%;
     height: 0px;
-    max-height: 0px;
 
     overflow: hidden;
-        
-    -webkit-transition: max-height 1s, padding 1s, ease-in;
-    transition: max-height, 1s padding 1s, ease-in;
-    transition-delay: 1s;
 }
 
 .layout_list.active
 {   
+    display: block;
+    
     padding: 0 0 50px 0;
     
     height: auto;
-    max-height: 500px;
-    
-    -webkit-transition: max-height 1s, padding 1s, ease-out;
-    transition: max-height 1s, padding 1s, ease-out;
-    transition-delay: 0s;
 }      
 
 .layout_list.inactive
@@ -184,7 +228,6 @@ select
     display: block;
     
     height: auto;
-    max-height: 300px;
 }
 
 .layout_list#balie
@@ -194,8 +237,6 @@ select
 
 .layout_list #passenger
 {
-    padding: 0 0 20px 0;
-    
     width: 100%;
     height: auto;
 }
@@ -206,16 +247,16 @@ select
     
     width: auto;
     height: auto;
-    min-height: 150px;
+    min-height: 245px;
     
     background-color: #1E4D2B;
     
-    border-bottom: 5px solid #0E3D1B;
+    border: 1px solid #0E3D1B;
+    border-bottom-width: 5px;
 }
 
 #layout_progress .progress
 {
-    min-height: 245px;
     width: 140px;
 
     color: #FFFFFF;
@@ -223,6 +264,14 @@ select
     font-size: 80pt;
     text-align: center;
     line-height: 160px;
+}
+
+#layout_progress .progress_titel
+{
+    color: #FFFFFF;
+    font-family: 'Helvetica', sans-serif;
+    font-size: 12pt;
+    text-align: center;
 }
 
 #balie_list

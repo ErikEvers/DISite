@@ -139,7 +139,7 @@ $(document).ready(function()
                 $('#passagier_gegevens').append('<li>' + pk[i] + ': ' + data[pk[i]] + '</li>');
             }
             
-            $('#passagier_gegevens').append('<li>Geboortedatum: ' + data['geboortedatum']['date'] + '</li>');
+            $('#passagier_gegevens').append('<li>Geboortedatum: ' + new Date(data['geboortedatum']['date']).toLocaleDateString() + '</li>');
             
             
             var vk = [
@@ -157,7 +157,7 @@ $(document).ready(function()
                 $('#vlucht_gegevens').append('<li>' + vk[i] + ': ' + data[vk[i]] + '</li>');
             }
             
-            $('#vlucht_gegevens').append('<li>Vertrektijdstip: ' + data['geboortedatum']['date'] + '</li>');
+            $('#vlucht_gegevens').append('<li>Vertrektijdstip: ' + data['vertrektijdstip']['date'] + '</li>');
             
         })
     });
@@ -335,8 +335,6 @@ function next(element)
 //Get list of bagage of passenger on flight
 function getBagageLijst(passagier, vluchtnummer)
 {
-    $('#bagage_list').empty();
-    
     $.post('fetch.php', { func: 'getBagage', args: [vluchtData.passagiernummer, vluchtData.vluchtnummer] }, function(data)
     {
         var data = JSON.parse(data);
@@ -345,6 +343,8 @@ function getBagageLijst(passagier, vluchtnummer)
         {
             var max = data[0].max_ppgewicht;
 
+            $('#bagage_list').empty();
+            
             for(var i = 0, il = data.length; i < il; i++)
             {
                 var bagage = data[i];
@@ -354,6 +354,12 @@ function getBagageLijst(passagier, vluchtnummer)
             }
 
             $("#gewicht_txt").attr('max', max);
+        }
+        else
+        {
+            $('#bagage_list').empty();
+            $('#bagage_list').append('<option></option');
+            $("#gewicht_txt").attr('max', 1000);
         }
     });
 }
