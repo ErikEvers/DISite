@@ -112,7 +112,11 @@ $(document).ready(function()
         
         $.post('fetch.php', { func : 'getGegevens', args : [passagier.passagiernummer, passagier.vluchtnummer]}, function(data)
         {
+            console.log(data);
+            
             var data = JSON.parse(data)[0];
+            
+            
 
             //Check for exceptions or errors
             if(data.hasOwnProperty('err'))
@@ -175,7 +179,8 @@ $(document).ready(function()
             //Check for exceptions or errors
             if(data.hasOwnProperty('err'))
             {
-
+                alert(data['err_message']);
+                
                 return;
             }
 
@@ -215,7 +220,24 @@ $(document).ready(function()
     {
         event.preventDefault();
         
-        $.post('fetch.php', { func : 'add_bagage', args :[passagier.passagiernummer, passagier.vluchtnummer, $(this).find('input[name=gewicht]').val()] }, function(data)
+        var gewicht = $(this).find('input[name=gewicht]').val();
+        
+        //If no items are selected exit runtime;
+        if(!(/^\d+$/).test(gewicht) && isFinite(gewicht))
+        {
+            if(parseFloat(gewicht) < 0)
+            {
+                alert('Het gewicht kan niet minder dan 0 zijn!')
+            }
+            else
+            {
+                alert('Geef een nummer voor het gewicht!')
+            }
+            
+            return false;
+        }
+            
+        $.post('fetch.php', { func : 'add_bagage', args :[passagier.passagiernummer, passagier.vluchtnummer, gewicht] }, function(data)
         {
             var data = JSON.parse(data);
             
@@ -246,6 +268,10 @@ $(document).ready(function()
             selected.push($(element).val());
         });
         
+        //If no items are selected exit runtime;
+        if(selected.length < 1)
+            return false;
+        
         $.post('fetch.php', { func : 'remove_bagages', args :[passagier.passagiernummer, passagier.vluchtnummer, selected] }, function(data)
         {
             var data = JSON.parse(data);
@@ -267,6 +293,7 @@ $(document).ready(function()
     });
 });
 
+//Next option
 function next(element)
 {
     var active = $(element);
@@ -305,6 +332,7 @@ function next(element)
     }
 }
 
+//Get list of bagage of passenger on flight
 function getBagageLijst(passagier, vluchtnummer)
 {
     $('#bagage_list').empty();
@@ -313,11 +341,19 @@ function getBagageLijst(passagier, vluchtnummer)
     {
         var data = JSON.parse(data);
         
-        for(var i = 0, il = data.length; i < il; i++)
+        if(data.length > 0)
         {
-            var bagage = data[i];
-            
-            $('#bagage_list').append('<option value="' + bagage.volgnummer + '">Volgnummer: ' + bagage.volgnummer + ', Gewicht: ' + bagage.gewicht + '</option>');
+            var max = data[0].max_ppgewicht;
+
+            for(var i = 0, il = data.length; i < il; i++)
+            {
+                var bagage = data[i];
+                max -= data[i].gewicht;
+
+                $('#bagage_list').append('<option value="' + bagage.volgnummer + '">Volgnummer: ' + bagage.volgnummer + ', Gewicht: ' + bagage.gewicht + '</option>');
+            }
+
+            $("#gewicht_txt").attr('max', max);
         }
     });
 }

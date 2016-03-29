@@ -87,11 +87,13 @@ select
 .input.list option
 {
     display: block;
-
+    
     padding: 10px;
 
     height: 40px;
 
+    border-bottom: 1px solid #AAAAAA;
+    
     line-height: 40px;
 }
 
@@ -138,34 +140,43 @@ select
 
 #layout_lists
 {
+    margin: 0 auto;
+    
     overflow: hidden;
+}
+
+@media only screen and (min-width : 1000px) {
+    #layout_lists
+    {
+        max-width: 1000px;
+    }
 }
 
 .layout_list
 {
-    display: none;
-
     margin: 25px 0;
-
-    padding: 0 0 50px 0;
 
     width: 100%;
     height: 0px;
+    max-height: 0px;
 
     overflow: hidden;
         
-    -webkit-transition: height 0.3s;
-    transition: height 0.3s;
+    -webkit-transition: max-height 1s, padding 1s, ease-in;
+    transition: max-height, 1s padding 1s, ease-in;
+    transition-delay: 1s;
 }
 
 .layout_list.active
-{
-    display: block;
+{   
+    padding: 0 0 50px 0;
     
     height: auto;
+    max-height: 500px;
     
-    -webkit-transition: height 0.3s;
-    transition: height 0.3s;
+    -webkit-transition: max-height 1s, padding 1s, ease-out;
+    transition: max-height 1s, padding 1s, ease-out;
+    transition-delay: 0s;
 }      
 
 .layout_list.inactive
@@ -173,6 +184,7 @@ select
     display: block;
     
     height: auto;
+    max-height: 300px;
 }
 
 .layout_list#balie

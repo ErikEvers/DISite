@@ -86,8 +86,7 @@
                         <select id="bagage_list" class="fill" multiple>
                         </select>
                         <form id="add_bagage">
-                            <label for="gewicht_txt">Gewicht: </label>
-                            <input type="number" id="gewicht_txt" name="gewicht"/>
+                            <input type="number" id="gewicht_txt" name="gewicht" placeholder="Gewicht" min="0" max="1000"/>
                             <input type="submit" value="Confirm"/>
                         </form>
                         <form id="remove_bagage">

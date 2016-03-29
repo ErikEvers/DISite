@@ -38,17 +38,24 @@
     }
 
     //Get Vlucht
-    function getGegevens($identification)
+    function getGegevens($args)
     {
         global $airport;
         
-        echo json_encode($airport->vraag_gegevens($identification[0], $identification[1]));
+        echo json_encode($airport->vraag_gegevens($args[0], $args[1]));
     }
         
     //Check in Passagier
     function checkinPassagier($args)
     {
         global $airport;
+        
+        for($i = 0, $il = count($args); $i < $il; $i++)
+        {
+            if(!isset($args[$i]))
+                return json_encode(['err'           => true,
+                                    'err_message'   => 'Niet alle gegevens zijn ingevuld!']);
+        }
         
         echo json_encode($airport->checkin_passagier($args[0]['value'], 
                                                      $args[1]['value'], 

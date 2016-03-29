@@ -112,11 +112,7 @@
 
     	public function vraag_gegevens($passagiernummer, $vluchtnummer)
     	{
-            $dataQuery = "SELECT P.passagiernummer, P.naam, P.geslacht, P.geboortedatum, PVV.balienummer, PVV.inchecktijdstip, PVV.stoel, V.vluchtnummer, V.gatecode, V.maatschappijcode, V.luchthavencode, V.vliegtuigtype, V.max_aantal_psgrs, V.max_totaalgewicht, V.max_ppgewicht, V.vertrektijdstip, V.aankomsttijdstip
-FROM Passagier P INNER JOIN PassagierVoorVlucht PVV ON P.passagiernummer = PVV.passagiernummer 
-INNER JOIN Object O ON O.passagiernummer = PVV.passagiernummer AND O.vluchtnummer = PVV.vluchtnummer 
-INNER JOIN Vlucht V ON PVV.vluchtnummer = V.vluchtnummer
-WHERE P.passagiernummer = ? AND V.vluchtnummer = ?";
+            $dataQuery = "SELECT P.passagiernummer, P.naam, P.geslacht, P.geboortedatum, PVV.balienummer, PVV.inchecktijdstip, PVV.stoel, V.vluchtnummer, V.gatecode, V.maatschappijcode, V.luchthavencode, V.vliegtuigtype, V.max_aantal_psgrs, V.max_totaalgewicht, V.max_ppgewicht, V.vertrektijdstip, V.aankomsttijdstip FROM Passagier P INNER JOIN PassagierVoorVlucht PVV ON P.passagiernummer = PVV.passagiernummer LEFT OUTER JOIN Object O ON O.passagiernummer = PVV.passagiernummer AND O.vluchtnummer = PVV.vluchtnummer INNER JOIN Vlucht V ON PVV.vluchtnummer = V.vluchtnummer WHERE P.passagiernummer = ? AND V.vluchtnummer = ?";
             
 			$result = $this->verzendQuery($dataQuery, array((int)$passagiernummer, (int)$vluchtnummer));
     		
