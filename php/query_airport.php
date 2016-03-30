@@ -134,15 +134,16 @@ SELECT P.passagiernummer, P.naam, P.geslacht, P.geboortedatum, PVV.balienummer, 
         
         public function checkin_passagier($stoel, $inchecktijdstip, $balienummer, $passagiernummer, $vluchtnummer)
         {
-            $dataQuery = "UPDATE PassagierVoorVlucht SET stoel = ?, inchecktijdstip = ?, balienummer = ? WHERE passagiernummer = ? AND vluchtnummer = ? ";
-            
-            //VERWIJDER DIT VOOR ECHTE VERSIE
-            //$this->beginTransaction();
-            
-			$result = $this->verzendQuery($dataQuery, array($stoel, $inchecktijdstip, $balienummer, $passagiernummer, $vluchtnummer));
-    		
-            //VERWIJDER DIT VOOR ECHTE VERSIE
-            //$this->rollbackTransaction();
+            if($stoel == '' || $inchecktijdstip == '')
+            {
+                $dataQuery = "UPDATE PassagierVoorVlucht SET stoel = NULL, inchecktijdstip = NULL, balienummer = NULL WHERE passagiernummer = ? AND vluchtnummer = ? ";
+			    $result = $this->verzendQuery($dataQuery, array($passagiernummer, $vluchtnummer));
+    		}
+            else
+            {
+                $dataQuery = "UPDATE PassagierVoorVlucht SET stoel = ?, inchecktijdstip = ?, balienummer = ? WHERE passagiernummer = ? AND vluchtnummer = ? ";
+			    $result = $this->verzendQuery($dataQuery, array($stoel, $inchecktijdstip, $balienummer, $passagiernummer, $vluchtnummer));
+    		}
             
             if($this->hasError())
             {
@@ -195,9 +196,15 @@ SELECT P.passagiernummer, P.naam, P.geslacht, P.geboortedatum, PVV.balienummer, 
         
         public function add_bagage($passagiernummer, $vluchtnummer, $gewicht)
         {
-            $dataQuery = "INSERT INTO Object(passagiernummer, vluchtnummer, gewicht) VALUES(?, ?, ?)";
+            //$dataQuery = "INSERT INTO Object(passagiernummer, vluchtnummer, gewicht) VALUES(?, ?, ?)";
+            $dataQuery = "EXEC ErikPatrick.spMaxGewicht @passagiernummer = ?, @vluchtnummer = ?, @gewicht = ?";
             
             $result = $this->verzendQuery($dataQuery, [$passagiernummer, $vluchtnummer, $gewicht]);
+            
+            if($this->hasError())
+            {
+                return $this->getError();
+            }
             
             if($result)
 			{

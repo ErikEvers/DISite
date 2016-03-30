@@ -89,7 +89,7 @@
                         </select>
                         <form id="add_bagage">
                             <input class="input text" type="number" id="gewicht_txt" name="gewicht" placeholder="Gewicht" min="0" max="1000"/>
-                            <input class="input submit" type="submit" value="Confirm"/>
+                            <input class="input submit" type="submit" value="Add"/>
                         </form>
                         <form id="remove_bagage">
                             <input class="input submit" type="submit" value="Remove"/>

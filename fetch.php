@@ -56,7 +56,7 @@
                 return json_encode(['err'           => true,
                                     'err_message'   => 'Niet alle gegevens zijn ingevuld!']);
         }
-        
+            
         echo json_encode($airport->checkin_passagier($args[0]['value'], 
                                                      $args[1]['value'], 
                                                      $args[2]['value'],

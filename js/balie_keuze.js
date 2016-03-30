@@ -68,7 +68,7 @@ $(document).ready(function()
         //$('#passagier').toggleClass('active');
         next($('.layout_list').get(0));
         
-        balienummer = balieArray[$(this).index() + 1].balienummer;
+        balienummer = balieArray[$(this).index()].balienummer;
     });
 
     $('#passenger').submit(function( event )
@@ -89,6 +89,8 @@ $(document).ready(function()
                 return;
             }
 
+            passagierArray = [];
+            
             //Loop through all data and add all passangers to select list
             for(var i = 0, il = data.length; i < il; i++)
             {
@@ -227,12 +229,14 @@ $(document).ready(function()
     {
         event.preventDefault();
         
-        var gewicht = $(this).find('input[name=gewicht]').val();
+        var gewicht = parseFloat($(this).find('input[name=gewicht]').val());
+        
+        console.log(gewicht);
         
         //If no items are selected exit runtime;
-        if(!(/^\d+$/).test(gewicht) || isFinite(gewicht))
+        if((/[^0-9]/g).test(gewicht) || !isFinite(gewicht))
         {
-            if(parseFloat(gewicht) < 1)
+            if(gewicht < 1)
             {
                 alert('Het gewicht kan niet 0 of minder zijn!')
             }
@@ -251,7 +255,10 @@ $(document).ready(function()
              //Check for exceptions or errors
             if(data.hasOwnProperty('err'))
             {
-                alert('failed');
+                
+                var unwantedMessage = "[Microsoft][SQL Server Native Client 11.0][SQL Server]";
+                
+                alert(data['message'].substr(unwantedMessage.length, data['message'].length));
 
                 return;
             }
