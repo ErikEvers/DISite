@@ -8,6 +8,7 @@ class Database
     private $password;
     
     private $conn;
+    private $error;
     
     public function __construct($server, $database, $uid, $password)
     {
@@ -16,6 +17,10 @@ class Database
         $this->uid = $uid;
         $this->password = $password;
         $this->conn = false;
+        $this->error = ['err'       => false,
+                        'SQLSTATE'  => '', 
+                        'code'      => '', 
+                        'message'   => ''];
 
         $this->maakConnectie($server, $database, $uid, $password);
     }
@@ -88,24 +93,39 @@ class Database
             }
         }
 
-        $result = sqlsrv_query($this->conn, $sql, $param);
+            $result = sqlsrv_query($this->conn, $sql, $param);
 
-        if($result === false)
-        {
-            if(($errors = sqlsrv_errors()) != null) 
+            if($result === false)
             {
-                foreach( $errors as $error ) {
-                    echo "SQLSTATE: ".$error[ 'SQLSTATE']."<br />";
-                    echo "code: ".$error[ 'code']."<br />";
-                    echo "message: ".$error[ 'message']."<br />";
+                $this->error = ['err'       => false,
+                                'SQLSTATE'  => '', 
+                                'code'      => '', 
+                                'message'   => ''];
+
+                if(($errors = sqlsrv_errors()) != null) 
+                {
+                    foreach( $errors as $error ) {
+                        $this->error['err']         = true;
+                        $this->error['SQLSTATE']    = $error[ 'SQLSTATE'];
+                        $this->error['code']        = $error[ 'code'];
+                        $this->error['message']     = $error[ 'message'];
+                    }
                 }
             }
-        }
         
         
         return $result;
     }
 
+    protected function hasError()
+    {
+        return $this->error['err'];
+    }
+    
+    protected function getError()
+    {
+        return $this->error;
+    }
     
     protected function beginTransaction()
     {

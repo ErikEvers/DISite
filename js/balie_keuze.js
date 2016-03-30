@@ -18,6 +18,7 @@ REQUEST OBJECT
 */
 
 
+var balieArray = [];
 var passagierArray  = [];
 var passagier       = null;
 var vluchtData     = [];
@@ -48,6 +49,8 @@ $(document).ready(function()
                     return;
                 }
 
+                balieArray = data;
+                
                 //Loop though all data and add all balies to select list
                 for(var i = 0, il = data.length; i < il; i++)
                 {
@@ -65,7 +68,7 @@ $(document).ready(function()
         //$('#passagier').toggleClass('active');
         next($('.layout_list').get(0));
         
-        balienummer = $(this).index() + 1;
+        balienummer = balieArray[$(this).index() + 1].balienummer;
     });
 
     $('#passenger').submit(function( event )
@@ -94,7 +97,7 @@ $(document).ready(function()
                 passagierArray.push(passagier);
 
                 $('#passagier_list').empty();
-                $('#passagier_list').append('<option>' + passagier.passagiernaam + ' ' + passagier.vluchtnummer + ' ' + passagier.bestemming + ' ' + passagier.maatschappijnaam + ' ' + passagier.vertrektijdstip + '</option>');
+                $('#passagier_list').append('<option>' + passagier.passagiernaam + ' ' + passagier.vluchtnummer + ' ' + passagier.bestemming + ' ' + passagier.maatschappijnaam + ' ' + new Date(passagier.vertrektijdstip.date).toLocaleDateString() + ' ' + new Date(passagier.vertrektijdstip.date).toLocaleTimeString() + '</option>');
             }
         })
 
@@ -111,12 +114,12 @@ $(document).ready(function()
         console.log(passagier);
         
         $.post('fetch.php', { func : 'getGegevens', args : [passagier.passagiernummer, passagier.vluchtnummer]}, function(data)
-        {
+        {    
             console.log(data);
             
             var data = JSON.parse(data)[0];
             
-            
+            console.log(data);
 
             //Check for exceptions or errors
             if(data.hasOwnProperty('err'))
@@ -147,7 +150,7 @@ $(document).ready(function()
                 'vliegtuigtype',
                 'luchthavencode',
                 'gatecode',
-                'maatschappijcode'
+                'maatschappijnaam'
             ];
             
             $('#vlucht_gegevens').empty();
@@ -157,7 +160,7 @@ $(document).ready(function()
                 $('#vlucht_gegevens').append('<li>' + vk[i] + ': ' + data[vk[i]] + '</li>');
             }
             
-            $('#vlucht_gegevens').append('<li>Vertrektijdstip: ' + data['vertrektijdstip']['date'] + '</li>');
+            $('#vlucht_gegevens').append('<li>Vertrektijdstip: ' + new Date(data['vertrektijdstip']['date']).toLocaleDateString() + ' ' + new Date(data['vertrektijdstip']['date']).toLocaleTimeString() +'</li>');
             
         })
     });
@@ -179,7 +182,11 @@ $(document).ready(function()
             //Check for exceptions or errors
             if(data.hasOwnProperty('err'))
             {
-                alert(data['err_message']);
+                console.log(data);
+                
+                var unwantedMessage = "[Microsoft][SQL Server Native Client 11.0][SQL Server]";
+                
+                alert(data['message'].substr(unwantedMessage.length, data['message'].length));
                 
                 return;
             }
@@ -223,11 +230,11 @@ $(document).ready(function()
         var gewicht = $(this).find('input[name=gewicht]').val();
         
         //If no items are selected exit runtime;
-        if(!(/^\d+$/).test(gewicht) && isFinite(gewicht))
+        if(!(/^\d+$/).test(gewicht) || isFinite(gewicht))
         {
-            if(parseFloat(gewicht) < 0)
+            if(parseFloat(gewicht) < 1)
             {
-                alert('Het gewicht kan niet minder dan 0 zijn!')
+                alert('Het gewicht kan niet 0 of minder zijn!')
             }
             else
             {

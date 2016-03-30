@@ -68,20 +68,20 @@
             //Bestemmingsnaam
             if(!empty($searchables[2]['value']))
             {
-                $bestemmingNaamSearch = " L.naam LIKE '%?%' AND";
-                $values[] = $searchables[2]['value'];
+                $bestemmingNaamSearch = " L.naam LIKE ? AND";
+                $values[] = '%' . $searchables[2]['value'] . '%';
             }
             //Maatschappijnaam
             if(!empty($searchables[3]['value']))
             {
-                $maatschappijNaamSearch = " M.naam LIKE '%?%' AND";
-                $values[] = $searchables[3]['value'];
+                $maatschappijNaamSearch = " M.naam LIKE ? AND";
+                $values[] = '%' . $searchables[3]['value'] . '%';
             }
             //Vlucht vertrektijdstip en aankomsttijdstip
             //ERIK VIND DAT ER TWEE WAARDES IN MOETEN??
             if(!empty($searchables[4]['value']))
             {
-                $vertrektijdstipSearch = " V.vertrektijdstip BETWEEN '? 00:00:00' AND '? 23:59:59' AND";
+                $vertrektijdstipSearch = " DATEDIFF(D, ?, V.vertrektijdstip) = 0 AND";
                 $values[] = $searchables[4]['value'];
             }
             
@@ -112,7 +112,8 @@
 
     	public function vraag_gegevens($passagiernummer, $vluchtnummer)
     	{
-            $dataQuery = "SELECT P.passagiernummer, P.naam, P.geslacht, P.geboortedatum, PVV.balienummer, PVV.inchecktijdstip, PVV.stoel, V.vluchtnummer, V.gatecode, V.maatschappijcode, V.luchthavencode, V.vliegtuigtype, V.max_aantal_psgrs, V.max_totaalgewicht, V.max_ppgewicht, V.vertrektijdstip, V.aankomsttijdstip FROM Passagier P INNER JOIN PassagierVoorVlucht PVV ON P.passagiernummer = PVV.passagiernummer LEFT OUTER JOIN Object O ON O.passagiernummer = PVV.passagiernummer AND O.vluchtnummer = PVV.vluchtnummer INNER JOIN Vlucht V ON PVV.vluchtnummer = V.vluchtnummer WHERE P.passagiernummer = ? AND V.vluchtnummer = ?";
+            $dataQuery = "
+SELECT P.passagiernummer, P.naam, P.geslacht, P.geboortedatum, PVV.balienummer, PVV.inchecktijdstip, PVV.stoel, V.vluchtnummer, V.gatecode, M.naam AS maatschappijnaam, V.luchthavencode, V.vliegtuigtype, V.max_aantal_psgrs, V.max_totaalgewicht, V.max_ppgewicht, V.vertrektijdstip, V.aankomsttijdstip, M.naam FROM Passagier P INNER JOIN PassagierVoorVlucht PVV ON P.passagiernummer = PVV.passagiernummer LEFT OUTER JOIN Object O ON O.passagiernummer = PVV.passagiernummer AND O.vluchtnummer = PVV.vluchtnummer INNER JOIN Vlucht V ON PVV.vluchtnummer = V.vluchtnummer INNER JOIN Maatschappij M ON M.maatschappijcode = V.maatschappijcode WHERE P.passagiernummer = ? AND V.vluchtnummer = ?";
             
 			$result = $this->verzendQuery($dataQuery, array((int)$passagiernummer, (int)$vluchtnummer));
     		
@@ -136,12 +137,17 @@
             $dataQuery = "UPDATE PassagierVoorVlucht SET stoel = ?, inchecktijdstip = ?, balienummer = ? WHERE passagiernummer = ? AND vluchtnummer = ? ";
             
             //VERWIJDER DIT VOOR ECHTE VERSIE
-            $this->beginTransaction();
+            //$this->beginTransaction();
             
 			$result = $this->verzendQuery($dataQuery, array($stoel, $inchecktijdstip, $balienummer, $passagiernummer, $vluchtnummer));
     		
             //VERWIJDER DIT VOOR ECHTE VERSIE
-            $this->rollbackTransaction();
+            //$this->rollbackTransaction();
+            
+            if($this->hasError())
+            {
+                return $this->getError();
+            }
             
             if($result)
             {
