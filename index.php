@@ -20,7 +20,10 @@
                 - Search
             -->
             <div class="fill_width" id="layout_header">
-                <ul id="layout_navigator" class="no_margin no_list_style" id="layout_options">
+                <div id="layout_title">
+                    Gelre Airport
+                </div>
+                <ul id="layout_navigator" class="no_list_style" id="layout_options">
                     <li id="show_balie">Balies</li>
                 </ul>
             </div>

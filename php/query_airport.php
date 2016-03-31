@@ -26,7 +26,7 @@
 
     	public function verzoek_balies()
     	{
-			$result = $this->verzendQuery("SELECT * FROM IncheckenBijMaatschappij IBM INNER JOIN Maatschappij M ON M.maatschappijcode = IBM.maatschappijcode", null);
+			$result = $this->verzendQuery("SELECT * FROM Balie", null);
     		
 			if($result)
 			{
@@ -77,8 +77,7 @@
                 $maatschappijNaamSearch = " M.naam LIKE ? AND";
                 $values[] = '%' . $searchables[3]['value'] . '%';
             }
-            //Vlucht vertrektijdstip en aankomsttijdstip
-            //ERIK VIND DAT ER TWEE WAARDES IN MOETEN??
+            //Vlucht vertrektijdstip
             if(!empty($searchables[4]['value']))
             {
                 $vertrektijdstipSearch = " DATEDIFF(D, ?, V.vertrektijdstip) = 0 AND";
@@ -113,7 +112,7 @@
     	public function vraag_gegevens($passagiernummer, $vluchtnummer)
     	{
             $dataQuery = "
-SELECT P.passagiernummer, P.naam, P.geslacht, P.geboortedatum, PVV.balienummer, PVV.inchecktijdstip, PVV.stoel, V.vluchtnummer, V.gatecode, M.naam AS maatschappijnaam, L.naam AS bestemming, V.vliegtuigtype, V.max_aantal_psgrs, V.max_totaalgewicht, V.max_ppgewicht, V.vertrektijdstip, V.aankomsttijdstip, M.naam FROM Passagier P INNER JOIN PassagierVoorVlucht PVV ON P.passagiernummer = PVV.passagiernummer LEFT OUTER JOIN Object O ON O.passagiernummer = PVV.passagiernummer AND O.vluchtnummer = PVV.vluchtnummer INNER JOIN Vlucht V ON PVV.vluchtnummer = V.vluchtnummer INNER JOIN Maatschappij M ON M.maatschappijcode = V.maatschappijcode INNER JOIN Luchthaven L ON L.luchthavencode = V.luchthavencode WHERE P.passagiernummer = ? AND V.vluchtnummer = ?";
+SELECT P.passagiernummer, P.naam, P.geslacht, P.geboortedatum, PVV.balienummer, PVV.inchecktijdstip, PVV.stoel, V.vluchtnummer, V.gatecode, M.naam AS maatschappijnaam, L.naam AS bestemming, V.vliegtuigtype, V.max_aantal_psgrs, V.max_totaalgewicht, V.max_ppgewicht, V.vertrektijdstip, V.aankomsttijdstip FROM Passagier P INNER JOIN PassagierVoorVlucht PVV ON P.passagiernummer = PVV.passagiernummer LEFT OUTER JOIN Object O ON O.passagiernummer = PVV.passagiernummer AND O.vluchtnummer = PVV.vluchtnummer INNER JOIN Vlucht V ON PVV.vluchtnummer = V.vluchtnummer INNER JOIN Maatschappij M ON M.maatschappijcode = V.maatschappijcode INNER JOIN Luchthaven L ON L.luchthavencode = V.luchthavencode WHERE P.passagiernummer = ? AND V.vluchtnummer = ?";
             
 			$result = $this->verzendQuery($dataQuery, array((int)$passagiernummer, (int)$vluchtnummer));
     		
@@ -196,6 +195,10 @@ SELECT P.passagiernummer, P.naam, P.geslacht, P.geboortedatum, PVV.balienummer, 
         
         public function add_bagage($passagiernummer, $vluchtnummer, $gewicht)
         {
+            //Limit weight of bagage to unusable numbers
+            if($gewicht > 1000000)
+                return ["err" => true];
+            
             //$dataQuery = "INSERT INTO Object(passagiernummer, vluchtnummer, gewicht) VALUES(?, ?, ?)";
             $dataQuery = "EXEC ErikPatrick.spMaxGewicht @passagiernummer = ?, @vluchtnummer = ?, @gewicht = ?";
             

@@ -30,7 +30,6 @@ $(document).ready(function()
     $("#show_balie").click(function()
     {
         $('#balie').toggleClass('active');
-        $('#balie_list').empty();
 
         //Check if #balie has class active
         if($('#balie').hasClass('active'))
@@ -42,21 +41,29 @@ $(document).ready(function()
                 var data = JSON.parse(data);
 
                 //Check for exceptions or errors
-                if(data.hasOwnProperty('err'))
-                {
+                if(data.length > 0)
+                {    
+                    if(data[0].hasOwnProperty('SQLSTATE'))
+                    {
 
+                        var unwantedMessage = "[Microsoft][SQL Server Native Client 11.0][SQL Server]";
 
-                    return;
+                        for(var i = 0, il = data.length; i < il; i++)
+                            alert(data[i]['message'].substr(unwantedMessage.length, data[i]['message'].length));
+
+                        return;
+                    }
                 }
 
                 balieArray = data;
+                $('#balie_list').empty();
                 
                 //Loop though all data and add all balies to select list
                 for(var i = 0, il = data.length; i < il; i++)
                 {
                     var balie = data[i];
 
-                    $('#balie_list').append('<option>' + balie.balienummer + ' ' + balie.naam + '</option>');
+                    $('#balie_list').append('<option>Balie ' + balie.balienummer + '</option>');
                 }
             });
         }
@@ -83,10 +90,18 @@ $(document).ready(function()
             var data = JSON.parse(data);
 
             //Check for exceptions or errors
-            if(data.hasOwnProperty('err'))
-            {
+            if(data.length > 0)
+            {    
+                if(data[0].hasOwnProperty('SQLSTATE'))
+                {
 
-                return;
+                    var unwantedMessage = "[Microsoft][SQL Server Native Client 11.0][SQL Server]";
+
+                    for(var i = 0, il = data.length; i < il; i++)
+                        alert(data[i]['message'].substr(unwantedMessage.length, data[i]['message'].length));
+
+                    return;
+                }
             }
 
             passagierArray = [];
@@ -121,7 +136,7 @@ $(document).ready(function()
             
             console.log(data);
 
-             //Check for exceptions or errors
+            //Check for exceptions or errors
             if(data.length > 0)
             {    
                 if(data[0].hasOwnProperty('SQLSTATE'))
@@ -240,7 +255,10 @@ $(document).ready(function()
             //Confirmation of inchecking
             if(data.hasOwnProperty('succes'))
             {
-                 next($('.layout_list').get(0));
+                reset($('.layout_list').get(0));
+                next($('.layout_list').get(0));
+                
+                alert('Passagier ' + vluchtData.passagiernummer + ' ' + vluchtData.naam + ' is ingecheckt op vlucht ' + vluchtData.vluchtnummer);
             }
         });
     });
@@ -368,6 +386,12 @@ function next(element)
 
         $(next_option).find('input[type=text],select').filter(':visible:first').focus();
     }
+}
+
+//Reset option
+function reset(element)
+{
+     $(element).find('input[type=text],select').val('');
 }
 
 //Get list of bagage of passenger on flight

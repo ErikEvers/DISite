@@ -127,10 +127,22 @@ select
     border: 1px solid #AAAAAA;
 }
 
-
+#layout_title
+{
+    margin: 0 0 0 30px;
+    padding: 0px;
+    
+    float: left;
+    
+    font-family: 'Raleway', sans-serif;
+    font-size: 30pt;
+    line-height: 100px;
+    color: #FFFFFF;
+}
 
 #layout_navigator
 {
+    margin: 0px 0px 0px 280px;
     padding: 25px;
 }
 
@@ -163,6 +175,8 @@ select
 
 #layout_header
 {
+    position: fixed;
+    
     height: 100px;
 
     background-color: #1E4D2B;
@@ -195,6 +209,7 @@ select
 #layout_lists
 {
     margin: 0 auto;
+    padding: 100px 0 0;
     
     overflow: hidden;
 }
@@ -222,8 +237,8 @@ select
 {   
     display: block;
     
-    padding: 0 0 50px 0;
-    
+    /*padding: 0 0 50px 0;
+    */
     height: auto;
 }      
 
