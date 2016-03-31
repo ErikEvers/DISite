@@ -90,6 +90,7 @@ $(document).ready(function()
             }
 
             passagierArray = [];
+            $('#passagier_list').empty();
             
             //Loop through all data and add all passangers to select list
             for(var i = 0, il = data.length; i < il; i++)
@@ -98,7 +99,6 @@ $(document).ready(function()
 
                 passagierArray.push(passagier);
 
-                $('#passagier_list').empty();
                 $('#passagier_list').append('<option>' + passagier.passagiernaam + ' ' + passagier.vluchtnummer + ' ' + passagier.bestemming + ' ' + passagier.maatschappijnaam + ' ' + new Date(passagier.vertrektijdstip.date).toLocaleDateString() + ' ' + new Date(passagier.vertrektijdstip.date).toLocaleTimeString() + '</option>');
             }
         })
@@ -117,17 +117,23 @@ $(document).ready(function()
         
         $.post('fetch.php', { func : 'getGegevens', args : [passagier.passagiernummer, passagier.vluchtnummer]}, function(data)
         {    
-            console.log(data);
-            
             var data = JSON.parse(data)[0];
             
             console.log(data);
 
-            //Check for exceptions or errors
-            if(data.hasOwnProperty('err'))
-            {
+             //Check for exceptions or errors
+            if(data.length > 0)
+            {    
+                if(data[0].hasOwnProperty('SQLSTATE'))
+                {
 
-                return;
+                    var unwantedMessage = "[Microsoft][SQL Server Native Client 11.0][SQL Server]";
+
+                    for(var i = 0, il = data.length; i < il; i++)
+                        alert(data[i]['message'].substr(unwantedMessage.length, data[i]['message'].length));
+
+                    return;
+                }
             }
 
             vluchtData = data;
@@ -135,6 +141,7 @@ $(document).ready(function()
                 'passagiernummer',
                 'naam',
                 'geslacht',
+                'stoel'
             ];
             
             $('#passagier_gegevens').empty();
@@ -145,12 +152,12 @@ $(document).ready(function()
             }
             
             $('#passagier_gegevens').append('<li>Geboortedatum: ' + new Date(data['geboortedatum']['date']).toLocaleDateString() + '</li>');
-            
+            $('#passagier_gegevens').append('<li>Inchecktijdstip: ' + new Date(data['inchecktijdstip']['date']).toLocaleDateString() + ' ' + new Date(data['inchecktijdstip']['date']).toLocaleTimeString() + '</li>');
             
             var vk = [
                 'vluchtnummer',
                 'vliegtuigtype',
-                'luchthavencode',
+                'bestemming',
                 'gatecode',
                 'maatschappijnaam'
             ];
@@ -163,6 +170,7 @@ $(document).ready(function()
             }
             
             $('#vlucht_gegevens').append('<li>Vertrektijdstip: ' + new Date(data['vertrektijdstip']['date']).toLocaleDateString() + ' ' + new Date(data['vertrektijdstip']['date']).toLocaleTimeString() +'</li>');
+            /*$('#vlucht_gegevens').append('<li>Aankomsttijdstip: ' + new Date(data['aankomsttijdstip']['date']).toLocaleDateString() + ' ' + new Date(data['aankomsttijdstip']['date']).toLocaleTimeString() +'</li>');*/
             
         })
     });
@@ -181,16 +189,19 @@ $(document).ready(function()
         {
             var data = JSON.parse(data);
 
-            //Check for exceptions or errors
-            if(data.hasOwnProperty('err'))
-            {
-                console.log(data);
-                
-                var unwantedMessage = "[Microsoft][SQL Server Native Client 11.0][SQL Server]";
-                
-                alert(data['message'].substr(unwantedMessage.length, data['message'].length));
-                
-                return;
+             //Check for exceptions or errors
+            if(data.length > 0)
+            {    
+                if(data[0].hasOwnProperty('SQLSTATE'))
+                {
+
+                    var unwantedMessage = "[Microsoft][SQL Server Native Client 11.0][SQL Server]";
+
+                    for(var i = 0, il = data.length; i < il; i++)
+                        alert(data[i]['message'].substr(unwantedMessage.length, data[i]['message'].length));
+
+                    return;
+                }
             }
 
             //Confirmation of inchecking
@@ -212,9 +223,18 @@ $(document).ready(function()
             var data = JSON.parse(data);
             
              //Check for exceptions or errors
-            if(data.hasOwnProperty('err'))
-            {
-                return;
+            if(data.length > 0)
+            {    
+                if(data[0].hasOwnProperty('SQLSTATE'))
+                {
+
+                    var unwantedMessage = "[Microsoft][SQL Server Native Client 11.0][SQL Server]";
+
+                    for(var i = 0, il = data.length; i < il; i++)
+                        alert(data[i]['message'].substr(unwantedMessage.length, data[i]['message'].length));
+
+                    return;
+                }
             }
 
             //Confirmation of inchecking
@@ -230,11 +250,9 @@ $(document).ready(function()
         event.preventDefault();
         
         var gewicht = parseFloat($(this).find('input[name=gewicht]').val());
-        
-        console.log(gewicht);
-        
+
         //If no items are selected exit runtime;
-        if((/[^0-9]/g).test(gewicht) || !isFinite(gewicht))
+        if((/[^0-9]/g).test(gewicht) || !isFinite(gewicht) || gewicht < 1)
         {
             if(gewicht < 1)
             {
@@ -252,15 +270,21 @@ $(document).ready(function()
         {
             var data = JSON.parse(data);
             
+            console.log(data);
+            
              //Check for exceptions or errors
-            if(data.hasOwnProperty('err'))
-            {
-                
-                var unwantedMessage = "[Microsoft][SQL Server Native Client 11.0][SQL Server]";
-                
-                alert(data['message'].substr(unwantedMessage.length, data['message'].length));
+            if(data.length > 0)
+            {    
+                if(data[0].hasOwnProperty('SQLSTATE'))
+                {
 
-                return;
+                    var unwantedMessage = "[Microsoft][SQL Server Native Client 11.0][SQL Server]";
+
+                    for(var i = 0, il = data.length; i < il; i++)
+                        alert(data[i]['message'].substr(unwantedMessage.length, data[i]['message'].length));
+
+                    return;
+                }
             }
 
             //Confirmation of inchecking

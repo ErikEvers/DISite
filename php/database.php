@@ -17,10 +17,7 @@ class Database
         $this->uid = $uid;
         $this->password = $password;
         $this->conn = false;
-        $this->error = ['err'       => false,
-                        'SQLSTATE'  => '', 
-                        'code'      => '', 
-                        'message'   => ''];
+        $this->error = [];
 
         $this->maakConnectie($server, $database, $uid, $password);
     }
@@ -97,18 +94,14 @@ class Database
 
             if($result === false)
             {
-                $this->error = ['err'       => false,
-                                'SQLSTATE'  => '', 
-                                'code'      => '', 
-                                'message'   => ''];
+                $this->error = [];
 
                 if(($errors = sqlsrv_errors()) != null) 
                 {
                     foreach( $errors as $error ) {
-                        $this->error['err']         = true;
-                        $this->error['SQLSTATE']    = $error[ 'SQLSTATE'];
-                        $this->error['code']        = $error[ 'code'];
-                        $this->error['message']     = $error[ 'message'];
+                        $this->error[] = ['SQLSTATE' => $error[ 'SQLSTATE'],
+                                          'code' => $error[ 'code'],
+                                          'message' => $error[ 'message']];
                     }
                 }
             }
@@ -119,7 +112,7 @@ class Database
 
     protected function hasError()
     {
-        return $this->error['err'];
+        return count($this->error) > 0;
     }
     
     protected function getError()

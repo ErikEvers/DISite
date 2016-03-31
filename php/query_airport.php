@@ -113,7 +113,7 @@
     	public function vraag_gegevens($passagiernummer, $vluchtnummer)
     	{
             $dataQuery = "
-SELECT P.passagiernummer, P.naam, P.geslacht, P.geboortedatum, PVV.balienummer, PVV.inchecktijdstip, PVV.stoel, V.vluchtnummer, V.gatecode, M.naam AS maatschappijnaam, V.luchthavencode, V.vliegtuigtype, V.max_aantal_psgrs, V.max_totaalgewicht, V.max_ppgewicht, V.vertrektijdstip, V.aankomsttijdstip, M.naam FROM Passagier P INNER JOIN PassagierVoorVlucht PVV ON P.passagiernummer = PVV.passagiernummer LEFT OUTER JOIN Object O ON O.passagiernummer = PVV.passagiernummer AND O.vluchtnummer = PVV.vluchtnummer INNER JOIN Vlucht V ON PVV.vluchtnummer = V.vluchtnummer INNER JOIN Maatschappij M ON M.maatschappijcode = V.maatschappijcode WHERE P.passagiernummer = ? AND V.vluchtnummer = ?";
+SELECT P.passagiernummer, P.naam, P.geslacht, P.geboortedatum, PVV.balienummer, PVV.inchecktijdstip, PVV.stoel, V.vluchtnummer, V.gatecode, M.naam AS maatschappijnaam, L.naam AS bestemming, V.vliegtuigtype, V.max_aantal_psgrs, V.max_totaalgewicht, V.max_ppgewicht, V.vertrektijdstip, V.aankomsttijdstip, M.naam FROM Passagier P INNER JOIN PassagierVoorVlucht PVV ON P.passagiernummer = PVV.passagiernummer LEFT OUTER JOIN Object O ON O.passagiernummer = PVV.passagiernummer AND O.vluchtnummer = PVV.vluchtnummer INNER JOIN Vlucht V ON PVV.vluchtnummer = V.vluchtnummer INNER JOIN Maatschappij M ON M.maatschappijcode = V.maatschappijcode INNER JOIN Luchthaven L ON L.luchthavencode = V.luchthavencode WHERE P.passagiernummer = ? AND V.vluchtnummer = ?";
             
 			$result = $this->verzendQuery($dataQuery, array((int)$passagiernummer, (int)$vluchtnummer));
     		
